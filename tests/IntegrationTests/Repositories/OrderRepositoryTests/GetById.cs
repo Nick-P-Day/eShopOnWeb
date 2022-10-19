@@ -13,8 +13,8 @@ public class GetById
 {
     private readonly CatalogContext _catalogContext;
     private readonly EfRepository<Order> _orderRepository;
-    private OrderBuilder OrderBuilder { get; } = new OrderBuilder();
     private readonly ITestOutputHelper _output;
+
     public GetById(ITestOutputHelper output)
     {
         _output = output;
@@ -24,6 +24,8 @@ public class GetById
         _catalogContext = new CatalogContext(dbOptions);
         _orderRepository = new EfRepository<Order>(_catalogContext);
     }
+
+    private OrderBuilder OrderBuilder { get; } = new OrderBuilder();
 
     [Fact]
     public async Task GetsExistingOrder()
@@ -37,8 +39,9 @@ public class GetById
         var orderFromRepo = await _orderRepository.GetByIdAsync(orderId);
         Assert.Equal(OrderBuilder.TestBuyerId, orderFromRepo.BuyerId);
 
-        // Note: Using InMemoryDatabase OrderItems is available. Will be null if using SQL DB.
-        // Use the OrderWithItemsByIdSpec instead of just GetById to get the full aggregate
+        // Note: Using InMemoryDatabase OrderItems is available. Will be null if
+        // using SQL DB. Use the OrderWithItemsByIdSpec instead of just GetById
+        // to get the full aggregate
         var firstItem = orderFromRepo.OrderItems.FirstOrDefault();
         Assert.Equal(OrderBuilder.TestUnits, firstItem.Units);
     }

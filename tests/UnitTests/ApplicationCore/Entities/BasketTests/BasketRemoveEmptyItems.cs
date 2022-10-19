@@ -5,9 +5,9 @@ namespace Microsoft.eShopWeb.UnitTests.ApplicationCore.Entities.BasketTests;
 
 public class BasketRemoveEmptyItems
 {
+    private readonly string _buyerId = "Test buyerId";
     private readonly int _testCatalogItemId = 123;
     private readonly decimal _testUnitPrice = 1.23m;
-    private readonly string _buyerId = "Test buyerId";
 
     [Fact]
     public void RemovesEmptyBasketItems()

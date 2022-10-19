@@ -9,12 +9,12 @@ using MinimalApi.Endpoint;
 namespace Microsoft.eShopWeb.PublicApi.CatalogItemEndpoints;
 
 /// <summary>
-/// Get a Catalog Item by Id
+///   Get a Catalog Item by Id
 /// </summary>
 public class CatalogItemGetByIdEndpoint : IEndpoint<IResult, GetByIdCatalogItemRequest>
 {
-    private IRepository<CatalogItem> _itemRepository;
     private readonly IUriComposer _uriComposer;
+    private IRepository<CatalogItem> _itemRepository;
 
     public CatalogItemGetByIdEndpoint(IUriComposer uriComposer)
     {

@@ -8,11 +8,11 @@ public class CacheEntry<T>
     {
         Value = item;
     }
+
     public CacheEntry()
     {
-
     }
 
-    public T Value { get; set; }
     public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+    public T Value { get; set; }
 }

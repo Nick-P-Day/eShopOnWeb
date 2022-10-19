@@ -13,12 +13,12 @@ using MinimalApi.Endpoint;
 namespace Microsoft.eShopWeb.PublicApi.CatalogItemEndpoints;
 
 /// <summary>
-/// Creates a new Catalog Item
+///   Creates a new Catalog Item
 /// </summary>
 public class CreateCatalogItemEndpoint : IEndpoint<IResult, CreateCatalogItemRequest>
 {
-    private IRepository<CatalogItem> _itemRepository;
     private readonly IUriComposer _uriComposer;
+    private IRepository<CatalogItem> _itemRepository;
 
     public CreateCatalogItemEndpoint(IUriComposer uriComposer)
     {
@@ -54,8 +54,8 @@ public class CreateCatalogItemEndpoint : IEndpoint<IResult, CreateCatalogItemReq
 
         if (newItem.Id != 0)
         {
-            //We disabled the upload functionality and added a default/placeholder image to this sample due to a potential security risk 
-            //  pointed out by the community. More info in this issue: https://github.com/dotnet-architecture/eShopOnWeb/issues/537 
+            //We disabled the upload functionality and added a default/placeholder image to this sample due to a potential security risk
+            //  pointed out by the community. More info in this issue: https://github.com/dotnet-architecture/eShopOnWeb/issues/537
             //  In production, we recommend uploading to a blob storage and deliver the image via CDN after a verification process.
 
             newItem.UpdatePictureUri("eCatalog-item-default.png");
@@ -73,6 +73,6 @@ public class CreateCatalogItemEndpoint : IEndpoint<IResult, CreateCatalogItemReq
             Price = newItem.Price
         };
         response.CatalogItem = dto;
-        return Results.Created($"api/catalog-items/{dto.Id}", response);       
+        return Results.Created($"api/catalog-items/{dto.Id}", response);
     }
 }

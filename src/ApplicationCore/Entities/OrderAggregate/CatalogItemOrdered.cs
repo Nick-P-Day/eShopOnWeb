@@ -3,8 +3,9 @@
 namespace Microsoft.eShopWeb.ApplicationCore.Entities.OrderAggregate;
 
 /// <summary>
-/// Represents a snapshot of the item that was ordered. If catalog item details change, details of
-/// the item that was part of a completed order should not change.
+///   Represents a snapshot of the item that was ordered. If catalog item
+///   details change, details of the item that was part of a completed order
+///   should not change.
 /// </summary>
 public class CatalogItemOrdered // ValueObject
 {
@@ -19,8 +20,10 @@ public class CatalogItemOrdered // ValueObject
         PictureUri = pictureUri;
     }
 
-    #pragma warning disable CS8618 // Required by Entity Framework
-    private CatalogItemOrdered() {}
+#pragma warning disable CS8618 // Required by Entity Framework
+
+    private CatalogItemOrdered()
+    { }
 
     public int CatalogItemId { get; private set; }
     public string ProductName { get; private set; }

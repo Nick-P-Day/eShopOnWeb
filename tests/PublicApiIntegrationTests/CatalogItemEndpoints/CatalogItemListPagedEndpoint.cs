@@ -1,9 +1,9 @@
-﻿using Microsoft.eShopWeb;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.eShopWeb;
 using Microsoft.eShopWeb.PublicApi.CatalogItemEndpoints;
 using Microsoft.eShopWeb.Web.ViewModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PublicApiIntegrationTests.CatalogItemEndpoints
 {
@@ -11,21 +11,8 @@ namespace PublicApiIntegrationTests.CatalogItemEndpoints
     public class CatalogItemListPagedEndpoint
     {
         [TestMethod]
-        public async Task ReturnsFirst10CatalogItems()
-        {
-            var client = ProgramTest.NewClient;
-            var response = await client.GetAsync("/api/catalog-items?pageSize=10");
-            response.EnsureSuccessStatusCode();
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            var model = stringResponse.FromJson<CatalogIndexViewModel>();
-
-            Assert.AreEqual(10, model.CatalogItems.Count());
-        }
-
-        [TestMethod]
         public async Task ReturnsCorrectCatalogItemsGivenPageIndex1()
         {
-
             var pageSize = 10;
             var pageIndex = 1;
 
@@ -44,6 +31,18 @@ namespace PublicApiIntegrationTests.CatalogItemEndpoints
             var totalExpected = totalItem - (pageSize * pageIndex);
 
             Assert.AreEqual(totalExpected, model2.CatalogItems.Count());
+        }
+
+        [TestMethod]
+        public async Task ReturnsFirst10CatalogItems()
+        {
+            var client = ProgramTest.NewClient;
+            var response = await client.GetAsync("/api/catalog-items?pageSize=10");
+            response.EnsureSuccessStatusCode();
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            var model = stringResponse.FromJson<CatalogIndexViewModel>();
+
+            Assert.AreEqual(10, model.CatalogItems.Count());
         }
     }
 }

@@ -11,7 +11,7 @@ using MinimalApi.Endpoint;
 namespace Microsoft.eShopWeb.PublicApi.CatalogItemEndpoints;
 
 /// <summary>
-/// Deletes a Catalog Item
+///   Deletes a Catalog Item
 /// </summary>
 public class DeleteCatalogItemEndpoint : IEndpoint<IResult, DeleteCatalogItemRequest>
 {

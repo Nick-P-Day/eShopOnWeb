@@ -2,9 +2,9 @@
 
 public class BasketViewModel
 {
+    public string? BuyerId { get; set; }
     public int Id { get; set; }
     public List<BasketItemViewModel> Items { get; set; } = new List<BasketItemViewModel>();
-    public string? BuyerId { get; set; }
 
     public decimal Total()
     {

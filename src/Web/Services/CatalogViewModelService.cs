@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.eShopWeb.ApplicationCore.Entities;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.ApplicationCore.Specifications;
 using Microsoft.eShopWeb.Web.ViewModels;
-using Microsoft.Extensions.Logging;
 
 namespace Microsoft.eShopWeb.Web.Services;
 
 /// <summary>
-/// This is a UI-specific service so belongs in UI project. It does not contain any business logic and works
-/// with UI-specific types (view models and SelectListItem types).
+///   This is a UI-specific service so belongs in UI project. It does not
+///   contain any business logic and works with UI-specific types (view models
+///   and SelectListItem types).
 /// </summary>
 public class CatalogViewModelService : ICatalogViewModelService
 {
-    private readonly ILogger<CatalogViewModelService> _logger;
-    private readonly IRepository<CatalogItem> _itemRepository;
     private readonly IRepository<CatalogBrand> _brandRepository;
+    private readonly IRepository<CatalogItem> _itemRepository;
+    private readonly ILogger<CatalogViewModelService> _logger;
     private readonly IRepository<CatalogType> _typeRepository;
     private readonly IUriComposer _uriComposer;
 
@@ -35,6 +31,22 @@ public class CatalogViewModelService : ICatalogViewModelService
         _brandRepository = brandRepository;
         _typeRepository = typeRepository;
         _uriComposer = uriComposer;
+    }
+
+    public async Task<IEnumerable<SelectListItem>> GetBrands()
+    {
+        _logger.LogInformation("GetBrands called.");
+        var brands = await _brandRepository.ListAsync();
+
+        var items = brands
+            .Select(brand => new SelectListItem() { Value = brand.Id.ToString(), Text = brand.Brand })
+            .OrderBy(b => b.Text)
+            .ToList();
+
+        var allItem = new SelectListItem() { Value = null, Text = "All", Selected = true };
+        items.Insert(0, allItem);
+
+        return items;
     }
 
     public async Task<CatalogIndexViewModel> GetCatalogItems(int pageIndex, int itemsPage, int? brandId, int? typeId)
@@ -67,7 +79,7 @@ public class CatalogViewModelService : ICatalogViewModelService
                 ActualPage = pageIndex,
                 ItemsPerPage = itemsOnPage.Count,
                 TotalItems = totalItems,
-                TotalPages = int.Parse(Math.Ceiling(((decimal)totalItems / itemsPage)).ToString())
+                TotalPages = int.Parse(Math.Ceiling((decimal)totalItems / itemsPage).ToString())
             }
         };
 
@@ -75,22 +87,6 @@ public class CatalogViewModelService : ICatalogViewModelService
         vm.PaginationInfo.Previous = (vm.PaginationInfo.ActualPage == 0) ? "is-disabled" : "";
 
         return vm;
-    }
-
-    public async Task<IEnumerable<SelectListItem>> GetBrands()
-    {
-        _logger.LogInformation("GetBrands called.");
-        var brands = await _brandRepository.ListAsync();
-
-        var items = brands
-            .Select(brand => new SelectListItem() { Value = brand.Id.ToString(), Text = brand.Brand })
-            .OrderBy(b => b.Text)
-            .ToList();
-
-        var allItem = new SelectListItem() { Value = null, Text = "All", Selected = true };
-        items.Insert(0, allItem);
-
-        return items;
     }
 
     public async Task<IEnumerable<SelectListItem>> GetTypes()

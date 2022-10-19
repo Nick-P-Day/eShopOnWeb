@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.eShopWeb.ApplicationCore.Entities.OrderAggregate;
+﻿using Microsoft.eShopWeb.ApplicationCore.Entities.OrderAggregate;
 using Microsoft.eShopWeb.UnitTests.Builders;
 using Xunit;
 
@@ -8,14 +7,6 @@ namespace Microsoft.eShopWeb.UnitTests.ApplicationCore.Entities.OrderTests;
 public class OrderTotal
 {
     private decimal _testUnitPrice = 42m;
-
-    [Fact]
-    public void IsZeroForNewOrder()
-    {
-        var order = new OrderBuilder().WithNoItems();
-
-        Assert.Equal(0, order.Total());
-    }
 
     [Fact]
     public void IsCorrectGiven1Item()
@@ -36,5 +27,13 @@ public class OrderTotal
         var order = builder.WithDefaultValues();
 
         Assert.Equal(builder.TestUnitPrice * builder.TestUnits, order.Total());
+    }
+
+    [Fact]
+    public void IsZeroForNewOrder()
+    {
+        var order = new OrderBuilder().WithNoItems();
+
+        Assert.Equal(0, order.Total());
     }
 }

@@ -11,12 +11,12 @@ using MinimalApi.Endpoint;
 namespace Microsoft.eShopWeb.PublicApi.CatalogBrandEndpoints;
 
 /// <summary>
-/// List Catalog Brands
+///   List Catalog Brands
 /// </summary>
 public class CatalogBrandListEndpoint : IEndpoint<IResult>
 {
-    private IRepository<CatalogBrand> _catalogBrandRepository;
     private readonly IMapper _mapper;
+    private IRepository<CatalogBrand> _catalogBrandRepository;
 
     public CatalogBrandListEndpoint(IMapper mapper)
     {

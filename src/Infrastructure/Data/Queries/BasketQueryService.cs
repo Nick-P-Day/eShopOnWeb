@@ -15,10 +15,10 @@ public class BasketQueryService : IBasketQueryService
     }
 
     /// <summary>
-    /// This method performs the sum on the database rather than in memory
+    ///   This method performs the sum on the database rather than in memory
     /// </summary>
-    /// <param name="username"></param>
-    /// <returns></returns>
+    /// <param name="username"> </param>
+    /// <returns> </returns>
     public async Task<int> CountTotalBasketItems(string username)
     {
         var totalItems = await _dbContext.Baskets

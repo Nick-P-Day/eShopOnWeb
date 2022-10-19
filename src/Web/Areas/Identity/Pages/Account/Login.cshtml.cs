@@ -13,9 +13,9 @@ namespace Microsoft.eShopWeb.Web.Areas.Identity.Pages.Account;
 [AllowAnonymous]
 public class LoginModel : PageModel
 {
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly ILogger<LoginModel> _logger;
     private readonly IBasketService _basketService;
+    private readonly ILogger<LoginModel> _logger;
+    private readonly SignInManager<ApplicationUser> _signInManager;
 
     public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, IBasketService basketService)
     {
@@ -24,29 +24,15 @@ public class LoginModel : PageModel
         _basketService = basketService;
     }
 
-    [BindProperty]
-    public InputModel? Input { get; set; }
-
-    public IList<AuthenticationScheme>? ExternalLogins { get; set; }
-
-    public string? ReturnUrl { get; set; }
-
     [TempData]
     public string? ErrorMessage { get; set; }
 
-    public class InputModel
-    {
-        [Required]
-        [EmailAddress]
-        public string? Email { get; set; }
+    public IList<AuthenticationScheme>? ExternalLogins { get; set; }
 
-        [Required]
-        [DataType(DataType.Password)]
-        public string? Password { get; set; }
+    [BindProperty]
+    public InputModel? Input { get; set; }
 
-        [Display(Name = "Remember me?")]
-        public bool RememberMe { get; set; }
-    }
+    public string? ReturnUrl { get; set; }
 
     public async Task OnGetAsync(string? returnUrl = null)
     {
@@ -55,7 +41,7 @@ public class LoginModel : PageModel
             ModelState.AddModelError(string.Empty, ErrorMessage);
         }
 
-        returnUrl = returnUrl ?? Url.Content("~/");
+        returnUrl ??= Url.Content("~/");
 
         // Clear the existing external cookie to ensure a clean login process
         await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
@@ -67,7 +53,7 @@ public class LoginModel : PageModel
 
     public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
     {
-        returnUrl = returnUrl ?? Url.Content("~/");
+        returnUrl ??= Url.Content("~/");
 
         if (ModelState.IsValid)
         {
@@ -84,7 +70,7 @@ public class LoginModel : PageModel
             }
             if (result.RequiresTwoFactor)
             {
-                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input?.RememberMe });
+                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, Input?.RememberMe });
             }
             if (result.IsLockedOut)
             {
@@ -114,5 +100,19 @@ public class LoginModel : PageModel
             }
             Response.Cookies.Delete(Constants.BASKET_COOKIENAME);
         }
+    }
+
+    public class InputModel
+    {
+        [Required]
+        [EmailAddress]
+        public string? Email { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string? Password { get; set; }
+
+        [Display(Name = "Remember me?")]
+        public bool RememberMe { get; set; }
     }
 }

@@ -10,10 +10,9 @@ namespace BlazorAdmin.Services;
 
 public class HttpService
 {
+    private readonly string _apiUrl;
     private readonly HttpClient _httpClient;
     private readonly ToastService _toastService;
-    private readonly string _apiUrl;
-
 
     public HttpService(HttpClient httpClient, IOptions<BaseUrlConfiguration> baseUrlConfiguration, ToastService toastService)
     {
@@ -22,10 +21,10 @@ public class HttpService
         _apiUrl = baseUrlConfiguration.Value.ApiBase;
     }
 
-    public async Task<T> HttpGet<T>(string uri)
+    public async Task<T> HttpDelete<T>(string uri, int id)
         where T : class
     {
-        var result = await _httpClient.GetAsync($"{_apiUrl}{uri}");
+        var result = await _httpClient.DeleteAsync($"{_apiUrl}{uri}/{id}");
         if (!result.IsSuccessStatusCode)
         {
             return null;
@@ -34,10 +33,10 @@ public class HttpService
         return await FromHttpResponseMessage<T>(result);
     }
 
-    public async Task<T> HttpDelete<T>(string uri, int id)
-        where T : class
+    public async Task<T> HttpGet<T>(string uri)
+            where T : class
     {
-        var result = await _httpClient.DeleteAsync($"{_apiUrl}{uri}/{id}");
+        var result = await _httpClient.GetAsync($"{_apiUrl}{uri}");
         if (!result.IsSuccessStatusCode)
         {
             return null;
@@ -81,16 +80,16 @@ public class HttpService
         return await FromHttpResponseMessage<T>(result);
     }
 
-    private StringContent ToJson(object obj)
-    {
-        return new StringContent(JsonSerializer.Serialize(obj), Encoding.UTF8, "application/json");
-    }
-
     private async Task<T> FromHttpResponseMessage<T>(HttpResponseMessage result)
     {
         return JsonSerializer.Deserialize<T>(await result.Content.ReadAsStringAsync(), new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         });
+    }
+
+    private StringContent ToJson(object obj)
+    {
+        return new StringContent(JsonSerializer.Serialize(obj), Encoding.UTF8, "application/json");
     }
 }

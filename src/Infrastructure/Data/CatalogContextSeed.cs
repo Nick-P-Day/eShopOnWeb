@@ -47,17 +47,20 @@ public class CatalogContextSeed
         }
         catch (Exception ex)
         {
-            if (retryForAvailability >= 10) throw;
+            if (retryForAvailability >= 10)
+            {
+                throw;
+            }
 
             retryForAvailability++;
-            
+
             logger.LogError(ex.Message);
             await SeedAsync(catalogContext, logger, retryForAvailability);
             throw;
         }
     }
 
-    static IEnumerable<CatalogBrand> GetPreconfiguredCatalogBrands()
+    private static IEnumerable<CatalogBrand> GetPreconfiguredCatalogBrands()
     {
         return new List<CatalogBrand>
             {
@@ -69,7 +72,7 @@ public class CatalogContextSeed
             };
     }
 
-    static IEnumerable<CatalogType> GetPreconfiguredCatalogTypes()
+    private static IEnumerable<CatalogType> GetPreconfiguredCatalogTypes()
     {
         return new List<CatalogType>
             {
@@ -80,7 +83,7 @@ public class CatalogContextSeed
             };
     }
 
-    static IEnumerable<CatalogItem> GetPreconfiguredItems()
+    private static IEnumerable<CatalogItem> GetPreconfiguredItems()
     {
         return new List<CatalogItem>
             {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -10,16 +7,15 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.eShopWeb.Infrastructure.Identity;
 using Microsoft.eShopWeb.Web.Configuration;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Logging;
 
 namespace Microsoft.eShopWeb.Web.Areas.Identity.Pages.Account;
 
 //TODO : replace IMemoryCache by distributed cache if you are in multi-host scenario
 public class LogoutModel : PageModel
 {
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly ILogger<LogoutModel> _logger;
     private readonly IMemoryCache _cache;
+    private readonly ILogger<LogoutModel> _logger;
+    private readonly SignInManager<ApplicationUser> _signInManager;
 
     public LogoutModel(SignInManager<ApplicationUser> signInManager, ILogger<LogoutModel> logger, IMemoryCache cache)
     {
@@ -44,13 +40,6 @@ public class LogoutModel : PageModel
         });
 
         _logger.LogInformation("User logged out.");
-        if (returnUrl != null)
-        {
-            return LocalRedirect(returnUrl);
-        }
-        else
-        {
-            return RedirectToPage("/Index");
-        }
+        return returnUrl != null ? LocalRedirect(returnUrl) : RedirectToPage("/Index");
     }
 }

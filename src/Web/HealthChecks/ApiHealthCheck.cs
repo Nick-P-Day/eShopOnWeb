@@ -1,7 +1,4 @@
-﻿using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using BlazorShared;
+﻿using BlazorShared;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 
@@ -20,15 +17,12 @@ public class ApiHealthCheck : IHealthCheck
         HealthCheckContext context,
         CancellationToken cancellationToken = default(CancellationToken))
     {
-        string myUrl = _baseUrlConfiguration.ApiBase + "catalog-items";
+        var myUrl = _baseUrlConfiguration.ApiBase + "catalog-items";
         var client = new HttpClient();
         var response = await client.GetAsync(myUrl);
         var pageContents = await response.Content.ReadAsStringAsync();
-        if (pageContents.Contains(".NET Bot Black Sweatshirt"))
-        {
-            return HealthCheckResult.Healthy("The check indicates a healthy result.");
-        }
-
-        return HealthCheckResult.Unhealthy("The check indicates an unhealthy result.");
+        return pageContents.Contains(".NET Bot Black Sweatshirt")
+            ? HealthCheckResult.Healthy("The check indicates a healthy result.")
+            : HealthCheckResult.Unhealthy("The check indicates an unhealthy result.");
     }
 }

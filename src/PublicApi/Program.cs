@@ -95,7 +95,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SchemaFilter<CustomSchemaFilters>();
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n
                       Enter 'Bearer' [space] and then your token in the text input below.
                       \r\n\r\nExample: 'Bearer 12345abcdef'",
         Name = "Authorization",
@@ -117,7 +117,6 @@ builder.Services.AddSwaggerGen(c =>
                             Scheme = "oauth2",
                             Name = "Bearer",
                             In = ParameterLocation.Header,
-
                         },
                         new List<string>()
                     }
@@ -167,8 +166,8 @@ app.UseAuthorization();
 // Enable middleware to serve generated Swagger as a JSON endpoint.
 app.UseSwagger();
 
-// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
-// specifying the Swagger JSON endpoint.
+// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the
+// Swagger JSON endpoint.
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
@@ -183,4 +182,5 @@ app.MapEndpoints();
 app.Logger.LogInformation("LAUNCHING PublicApi");
 app.Run();
 
-public partial class Program { }
+public partial class Program
+{ }

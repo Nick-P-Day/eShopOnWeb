@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Reflection;
@@ -18,10 +17,9 @@ public class CatalogLookupDataService<TLookupData, TReponse>
     where TLookupData : LookupData
     where TReponse : ILookupDataResponse<TLookupData>
 {
-
+    private readonly string _apiUrl;
     private readonly HttpClient _httpClient;
     private readonly ILogger<CatalogLookupDataService<TLookupData, TReponse>> _logger;
-    private readonly string _apiUrl;
 
     public CatalogLookupDataService(HttpClient httpClient,
         IOptions<BaseUrlConfiguration> baseUrlConfiguration,

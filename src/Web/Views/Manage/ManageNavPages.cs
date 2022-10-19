@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Microsoft.eShopWeb.Web.Views.Manage;
@@ -8,21 +7,30 @@ public static class ManageNavPages
 {
     public static string ActivePageKey => "ActivePage";
 
-    public static string Index => "Index";
-
     public static string ChangePassword => "ChangePassword";
-
     public static string ExternalLogins => "ExternalLogins";
-
+    public static string Index => "Index";
     public static string TwoFactorAuthentication => "TwoFactorAuthentication";
 
-    public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
+    public static void AddActivePage(this ViewDataDictionary viewData, string activePage)
+    {
+        viewData[ActivePageKey] = activePage;
+    }
 
-    public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
+    public static string ChangePasswordNavClass(ViewContext viewContext)
+    {
+        return PageNavClass(viewContext, ChangePassword);
+    }
 
-    public static string ExternalLoginsNavClass(ViewContext viewContext) => PageNavClass(viewContext, ExternalLogins);
+    public static string ExternalLoginsNavClass(ViewContext viewContext)
+    {
+        return PageNavClass(viewContext, ExternalLogins);
+    }
 
-    public static string TwoFactorAuthenticationNavClass(ViewContext viewContext) => PageNavClass(viewContext, TwoFactorAuthentication);
+    public static string IndexNavClass(ViewContext viewContext)
+    {
+        return PageNavClass(viewContext, Index);
+    }
 
     public static string PageNavClass(ViewContext viewContext, string page)
     {
@@ -30,5 +38,8 @@ public static class ManageNavPages
         return string.Equals(activePage, page, StringComparison.OrdinalIgnoreCase) ? "active" : string.Empty;
     }
 
-    public static void AddActivePage(this ViewDataDictionary viewData, string activePage) => viewData[ActivePageKey] = activePage;
+    public static string TwoFactorAuthenticationNavClass(ViewContext viewContext)
+    {
+        return PageNavClass(viewContext, TwoFactorAuthentication);
+    }
 }

@@ -11,21 +11,21 @@ using MinimalApi.Endpoint;
 namespace Microsoft.eShopWeb.PublicApi.CatalogTypeEndpoints;
 
 /// <summary>
-/// List Catalog Types
+///   List Catalog Types
 /// </summary>
 public class CatalogTypeListEndpoint : IEndpoint<IResult>
 {
-    private IRepository<CatalogType> _catalogTypeRepository;
     private readonly IMapper _mapper;
+    private IRepository<CatalogType> _catalogTypeRepository;
 
     public CatalogTypeListEndpoint(IMapper mapper)
-    {      
+    {
         _mapper = mapper;
     }
 
     public void AddRoute(IEndpointRouteBuilder app)
     {
-        app.MapGet("api/catalog-types", 
+        app.MapGet("api/catalog-types",
             async (IRepository<CatalogType> catalogTypeRepository) =>
             {
                 _catalogTypeRepository = catalogTypeRepository;

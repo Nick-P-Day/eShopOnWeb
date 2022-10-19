@@ -56,7 +56,6 @@ builder.Services.AddMvc(options =>
 {
     options.Conventions.Add(new RouteTokenTransformerConvention(
              new SlugifyParameterTransformer()));
-
 });
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages(options =>

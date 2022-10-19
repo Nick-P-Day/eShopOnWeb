@@ -6,14 +6,15 @@ namespace Microsoft.eShopWeb.UnitTests.Builders;
 public class BasketBuilder
 {
     private Basket _basket;
-    public string BasketBuyerId => "testbuyerId@test.com";
-
-    public int BasketId => 1;
 
     public BasketBuilder()
     {
         _basket = WithNoItems();
     }
+
+    public string BasketBuyerId => "testbuyerId@test.com";
+
+    public int BasketId => 1;
 
     public Basket Build()
     {

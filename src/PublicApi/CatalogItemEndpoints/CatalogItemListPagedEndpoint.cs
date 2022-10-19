@@ -13,13 +13,13 @@ using MinimalApi.Endpoint;
 namespace Microsoft.eShopWeb.PublicApi.CatalogItemEndpoints;
 
 /// <summary>
-/// List Catalog Items (paged)
+///   List Catalog Items (paged)
 /// </summary>
 public class CatalogItemListPagedEndpoint : IEndpoint<IResult, ListPagedCatalogItemRequest>
 {
-    private IRepository<CatalogItem> _itemRepository;
-    private readonly IUriComposer _uriComposer;
     private readonly IMapper _mapper;
+    private readonly IUriComposer _uriComposer;
+    private IRepository<CatalogItem> _itemRepository;
 
     public CatalogItemListPagedEndpoint(IUriComposer uriComposer, IMapper mapper)
     {
@@ -34,7 +34,7 @@ public class CatalogItemListPagedEndpoint : IEndpoint<IResult, ListPagedCatalogI
             {
                 _itemRepository = itemRepository;
                 return await HandleAsync(new ListPagedCatalogItemRequest(pageSize, pageIndex, catalogBrandId, catalogTypeId));
-            })            
+            })
             .Produces<ListPagedCatalogItemResponse>()
             .WithTags("CatalogItemEndpoints");
     }

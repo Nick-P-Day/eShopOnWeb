@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.eShopWeb.ApplicationCore.Entities.OrderAggregate;
 using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.ApplicationCore.Specifications;
@@ -24,25 +21,22 @@ public class GetOrderDetailsHandler : IRequestHandler<GetOrderDetails, OrderView
         var spec = new OrderWithItemsByIdSpec(request.OrderId);
         var order = await _orderRepository.FirstOrDefaultAsync(spec, cancellationToken);
 
-        if (order == null)
-        {
-            return null;
-        }
-
-        return new OrderViewModel
-        {
-            OrderDate = order.OrderDate,
-            OrderItems = order.OrderItems.Select(oi => new OrderItemViewModel
+        return order == null
+            ? null
+            : new OrderViewModel
             {
-                PictureUrl = oi.ItemOrdered.PictureUri,
-                ProductId = oi.ItemOrdered.CatalogItemId,
-                ProductName = oi.ItemOrdered.ProductName,
-                UnitPrice = oi.UnitPrice,
-                Units = oi.Units
-            }).ToList(),
-            OrderNumber = order.Id,
-            ShippingAddress = order.ShipToAddress,
-            Total = order.Total()
-        };
+                OrderDate = order.OrderDate,
+                OrderItems = order.OrderItems.Select(oi => new OrderItemViewModel
+                {
+                    PictureUrl = oi.ItemOrdered.PictureUri,
+                    ProductId = oi.ItemOrdered.CatalogItemId,
+                    ProductName = oi.ItemOrdered.ProductName,
+                    UnitPrice = oi.UnitPrice,
+                    Units = oi.Units
+                }).ToList(),
+                OrderNumber = order.Id,
+                ShippingAddress = order.ShipToAddress,
+                Total = order.Total()
+            };
     }
 }

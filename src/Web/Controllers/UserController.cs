@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using BlazorShared.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,8 +20,10 @@ public class UserController : ControllerBase
     [HttpGet]
     [Authorize]
     [AllowAnonymous]
-    public async Task<IActionResult> GetCurrentUser() =>
-        Ok(await CreateUserInfo(User));
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        return Ok(await CreateUserInfo(User));
+    }
 
     private async Task<UserInfo> CreateUserInfo(ClaimsPrincipal claimsPrincipal)
     {

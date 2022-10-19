@@ -1,12 +1,12 @@
-﻿using BlazorShared.Models;
-using Microsoft.eShopWeb;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Net;
+﻿using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using BlazorShared.Models;
+using Microsoft.eShopWeb;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace PublicApiIntegrationTests.AuthEndpoints
 {
@@ -14,11 +14,10 @@ namespace PublicApiIntegrationTests.AuthEndpoints
     public class CreateCatalogItemEndpointTest
     {
         private int _testBrandId = 1;
-        private int _testTypeId = 2;
         private string _testDescription = "test description";
         private string _testName = "test name";
         private decimal _testPrice = 1.23m;
-
+        private int _testTypeId = 2;
 
         [TestMethod]
         public async Task ReturnsNotAuthorizedGivenNormalUserToken()

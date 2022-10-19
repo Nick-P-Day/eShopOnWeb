@@ -15,11 +15,11 @@ namespace Microsoft.eShopWeb.Web.Pages.Basket;
 public class CheckoutModel : PageModel
 {
     private readonly IBasketService _basketService;
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly IOrderService _orderService;
-    private string? _username = null;
     private readonly IBasketViewModelService _basketViewModelService;
     private readonly IAppLogger<CheckoutModel> _logger;
+    private readonly IOrderService _orderService;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private string? _username = null;
 
     public CheckoutModel(IBasketService basketService,
         IBasketViewModelService basketViewModelService,
@@ -67,6 +67,25 @@ public class CheckoutModel : PageModel
         return RedirectToPage("Success");
     }
 
+    private void GetOrSetBasketCookieAndUserName()
+    {
+        if (Request.Cookies.ContainsKey(Constants.BASKET_COOKIENAME))
+        {
+            _username = Request.Cookies[Constants.BASKET_COOKIENAME];
+        }
+        if (_username != null)
+        {
+            return;
+        }
+
+        _username = Guid.NewGuid().ToString();
+        var cookieOptions = new CookieOptions
+        {
+            Expires = DateTime.Today.AddYears(10)
+        };
+        Response.Cookies.Append(Constants.BASKET_COOKIENAME, _username, cookieOptions);
+    }
+
     private async Task SetBasketModelAsync()
     {
         Guard.Against.Null(User?.Identity?.Name, nameof(User.Identity.Name));
@@ -79,19 +98,5 @@ public class CheckoutModel : PageModel
             GetOrSetBasketCookieAndUserName();
             BasketModel = await _basketViewModelService.GetOrCreateBasketForUser(_username!);
         }
-    }
-
-    private void GetOrSetBasketCookieAndUserName()
-    {
-        if (Request.Cookies.ContainsKey(Constants.BASKET_COOKIENAME))
-        {
-            _username = Request.Cookies[Constants.BASKET_COOKIENAME];
-        }
-        if (_username != null) return;
-
-        _username = Guid.NewGuid().ToString();
-        var cookieOptions = new CookieOptions();
-        cookieOptions.Expires = DateTime.Today.AddYears(10);
-        Response.Cookies.Append(Constants.BASKET_COOKIENAME, _username, cookieOptions);
     }
 }

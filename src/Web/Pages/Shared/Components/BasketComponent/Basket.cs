@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Ardalis.GuardClauses;
+﻿using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.eShopWeb.Infrastructure.Identity;
@@ -38,11 +36,8 @@ public class Basket : ViewComponent
             return await _basketService.CountTotalBasketItems(User.Identity.Name);
         }
 
-        string? anonymousId = GetAnnonymousIdFromCookie();
-        if (anonymousId == null)
-            return 0;
-
-        return await _basketService.CountTotalBasketItems(anonymousId);
+        var anonymousId = GetAnnonymousIdFromCookie();
+        return anonymousId == null ? 0 : await _basketService.CountTotalBasketItems(anonymousId);
     }
 
     private string? GetAnnonymousIdFromCookie()

@@ -19,25 +19,20 @@ public class OrderController : Controller
         _mediator = mediator;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> MyOrders()
-    {   
-        Guard.Against.Null(User?.Identity?.Name, nameof(User.Identity.Name));
-        var viewModel = await _mediator.Send(new GetMyOrders(User.Identity.Name));
-
-        return View(viewModel);
-    }
-
     [HttpGet("{orderId}")]
     public async Task<IActionResult> Detail(int orderId)
     {
         Guard.Against.Null(User?.Identity?.Name, nameof(User.Identity.Name));
         var viewModel = await _mediator.Send(new GetOrderDetails(User.Identity.Name, orderId));
 
-        if (viewModel == null)
-        {
-            return BadRequest("No such order found for this user.");
-        }
+        return viewModel == null ? BadRequest("No such order found for this user.") : View(viewModel);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> MyOrders()
+    {
+        Guard.Against.Null(User?.Identity?.Name, nameof(User.Identity.Name));
+        var viewModel = await _mediator.Send(new GetMyOrders(User.Identity.Name));
 
         return View(viewModel);
     }

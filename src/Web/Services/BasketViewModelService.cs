@@ -9,10 +9,10 @@ namespace Microsoft.eShopWeb.Web.Services;
 
 public class BasketViewModelService : IBasketViewModelService
 {
-    private readonly IRepository<Basket> _basketRepository;
-    private readonly IUriComposer _uriComposer;
     private readonly IBasketQueryService _basketQueryService;
+    private readonly IRepository<Basket> _basketRepository;
     private readonly IRepository<CatalogItem> _itemRepository;
+    private readonly IUriComposer _uriComposer;
 
     public BasketViewModelService(IRepository<Basket> basketRepository,
         IRepository<CatalogItem> itemRepository,
@@ -25,10 +25,17 @@ public class BasketViewModelService : IBasketViewModelService
         _itemRepository = itemRepository;
     }
 
+    public async Task<int> CountTotalBasketItems(string username)
+    {
+        var counter = await _basketQueryService.CountTotalBasketItems(username);
+
+        return counter;
+    }
+
     public async Task<BasketViewModel> GetOrCreateBasketForUser(string userName)
     {
         var basketSpec = new BasketWithItemsSpecification(userName);
-        var basket = (await _basketRepository.FirstOrDefaultAsync(basketSpec));
+        var basket = await _basketRepository.FirstOrDefaultAsync(basketSpec);
 
         if (basket == null)
         {
@@ -36,6 +43,16 @@ public class BasketViewModelService : IBasketViewModelService
         }
         var viewModel = await Map(basket);
         return viewModel;
+    }
+
+    public async Task<BasketViewModel> Map(Basket basket)
+    {
+        return new BasketViewModel()
+        {
+            BuyerId = basket.BuyerId,
+            Id = basket.Id,
+            Items = await GetBasketItems(basket.Items)
+        };
     }
 
     private async Task<BasketViewModel> CreateBasketForUser(string userId)
@@ -72,22 +89,5 @@ public class BasketViewModelService : IBasketViewModelService
         }).ToList();
 
         return items;
-    }
-
-    public async Task<BasketViewModel> Map(Basket basket)
-    {
-        return new BasketViewModel()
-        {
-            BuyerId = basket.BuyerId,
-            Id = basket.Id,
-            Items = await GetBasketItems(basket.Items)
-        };
-    }
-
-    public async Task<int> CountTotalBasketItems(string username)
-    {
-        var counter = await _basketQueryService.CountTotalBasketItems(username);
-
-        return counter;
     }
 }

@@ -8,19 +8,25 @@ namespace BlazorShared.Models;
 
 public class CatalogItem
 {
-    public int Id { get; set; }
-
-    public int CatalogTypeId { get; set; }
-    public string CatalogType { get; set; } = "NotSet";
-
-    public int CatalogBrandId { get; set; }
+    private const int ImageMaximumBytes = 512000;
     public string CatalogBrand { get; set; } = "NotSet";
+    public int CatalogBrandId { get; set; }
+    public string CatalogType { get; set; } = "NotSet";
+    public int CatalogTypeId { get; set; }
+
+    [Required(ErrorMessage = "The Description field is required")]
+    public string Description { get; set; }
+
+    public int Id { get; set; }
 
     [Required(ErrorMessage = "The Name field is required")]
     public string Name { get; set; }
 
-    [Required(ErrorMessage = "The Description field is required")]
-    public string Description { get; set; }
+    public string PictureBase64 { get; set; }
+
+    public string PictureName { get; set; }
+
+    public string PictureUri { get; set; }
 
     // decimal(18,2)
     [RegularExpression(@"^\d+(\.\d{0,2})*$", ErrorMessage = "The field Price must be a positive number with maximum two decimals.")]
@@ -28,11 +34,20 @@ public class CatalogItem
     [DataType(DataType.Currency)]
     public decimal Price { get; set; }
 
-    public string PictureUri { get; set; }
-    public string PictureBase64 { get; set; }
-    public string PictureName { get; set; }
+    public static async Task<string> DataToBase64(IFileListEntry fileItem)
+    {
+        using (var reader = new StreamReader(fileItem.Data))
+        {
+            using (var memStream = new MemoryStream())
+            {
+                await reader.BaseStream.CopyToAsync(memStream);
+                var fileData = memStream.ToArray();
+                var encodedBase64 = Convert.ToBase64String(fileData);
 
-    private const int ImageMaximumBytes = 512000;
+                return encodedBase64;
+            }
+        }
+    }
 
     public static string IsValidImage(string pictureName, string pictureBase64)
     {
@@ -58,21 +73,6 @@ public class CatalogItem
         }
 
         return null;
-    }
-
-    public static async Task<string> DataToBase64(IFileListEntry fileItem)
-    {
-        using (var reader = new StreamReader(fileItem.Data))
-        {
-            using (var memStream = new MemoryStream())
-            {
-                await reader.BaseStream.CopyToAsync(memStream);
-                var fileData = memStream.ToArray();
-                var encodedBase64 = Convert.ToBase64String(fileData);
-
-                return encodedBase64;
-            }
-        }
     }
 
     private static bool IsExtensionValid(string fileName)

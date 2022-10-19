@@ -6,15 +6,6 @@ namespace Microsoft.eShopWeb.ApplicationCore.Entities;
 
 public class CatalogItem : BaseEntity, IAggregateRoot
 {
-    public string Name { get; private set; }
-    public string Description { get; private set; }
-    public decimal Price { get; private set; }
-    public string PictureUri { get; private set; }
-    public int CatalogTypeId { get; private set; }
-    public CatalogType? CatalogType { get; private set; }
-    public int CatalogBrandId { get; private set; }
-    public CatalogBrand? CatalogBrand { get; private set; }
-
     public CatalogItem(int catalogTypeId,
         int catalogBrandId,
         string description,
@@ -30,6 +21,21 @@ public class CatalogItem : BaseEntity, IAggregateRoot
         PictureUri = pictureUri;
     }
 
+    public CatalogBrand? CatalogBrand { get; private set; }
+    public int CatalogBrandId { get; private set; }
+    public CatalogType? CatalogType { get; private set; }
+    public int CatalogTypeId { get; private set; }
+    public string Description { get; private set; }
+    public string Name { get; private set; }
+    public string PictureUri { get; private set; }
+    public decimal Price { get; private set; }
+
+    public void UpdateBrand(int catalogBrandId)
+    {
+        Guard.Against.Zero(catalogBrandId, nameof(catalogBrandId));
+        CatalogBrandId = catalogBrandId;
+    }
+
     public void UpdateDetails(CatalogItemDetails details)
     {
         Guard.Against.NullOrEmpty(details.Name, nameof(details.Name));
@@ -41,18 +47,6 @@ public class CatalogItem : BaseEntity, IAggregateRoot
         Price = details.Price;
     }
 
-    public void UpdateBrand(int catalogBrandId)
-    {
-        Guard.Against.Zero(catalogBrandId, nameof(catalogBrandId));
-        CatalogBrandId = catalogBrandId;
-    }
-
-    public void UpdateType(int catalogTypeId)
-    {
-        Guard.Against.Zero(catalogTypeId, nameof(catalogTypeId));
-        CatalogTypeId = catalogTypeId;
-    }
-
     public void UpdatePictureUri(string pictureName)
     {
         if (string.IsNullOrEmpty(pictureName))
@@ -61,6 +55,12 @@ public class CatalogItem : BaseEntity, IAggregateRoot
             return;
         }
         PictureUri = $"images\\products\\{pictureName}?{new DateTime().Ticks}";
+    }
+
+    public void UpdateType(int catalogTypeId)
+    {
+        Guard.Against.Zero(catalogTypeId, nameof(catalogTypeId));
+        CatalogTypeId = catalogTypeId;
     }
 
     public readonly record struct CatalogItemDetails

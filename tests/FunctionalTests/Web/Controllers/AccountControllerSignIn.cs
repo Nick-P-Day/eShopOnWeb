@@ -19,16 +19,6 @@ public class AccountControllerSignIn : IClassFixture<TestApplication>
     public HttpClient Client { get; }
 
     [Fact]
-    public async Task ReturnsSignInScreenOnGet()
-    {
-        var response = await Client.GetAsync("/identity/account/login");
-        response.EnsureSuccessStatusCode();
-        var stringResponse = await response.Content.ReadAsStringAsync();
-
-        Assert.Contains("demouser@microsoft.com", stringResponse);
-    }
-
-    [Fact]
     public void RegexMatchesValidRequestVerificationToken()
     {
         // TODO: Move to a unit test
@@ -51,6 +41,16 @@ public class AccountControllerSignIn : IClassFixture<TestApplication>
 
         string token = WebPageHelpers.GetRequestVerificationToken(stringResponse);
         Assert.True(token.Length > 50);
+    }
+
+    [Fact]
+    public async Task ReturnsSignInScreenOnGet()
+    {
+        var response = await Client.GetAsync("/identity/account/login");
+        response.EnsureSuccessStatusCode();
+        var stringResponse = await response.Content.ReadAsStringAsync();
+
+        Assert.Contains("demouser@microsoft.com", stringResponse);
     }
 
     [Fact]
@@ -108,6 +108,5 @@ public class AccountControllerSignIn : IClassFixture<TestApplication>
         var profileResponse2 = await Client.GetAsync("/manage/my-account");
         var stringProfileResponse2 = await profileResponse2.Content.ReadAsStringAsync();
         Assert.Contains("03656565", stringProfileResponse2);
-
     }
 }

@@ -3,7 +3,7 @@
 namespace Microsoft.eShopWeb.PublicApi;
 
 /// <summary>
-/// Base class used by API responses
+///   Base class used by API responses
 /// </summary>
 public abstract class BaseResponse : BaseMessage
 {

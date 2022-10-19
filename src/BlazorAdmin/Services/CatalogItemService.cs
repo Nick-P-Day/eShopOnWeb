@@ -5,15 +5,14 @@ using BlazorShared.Interfaces;
 using BlazorShared.Models;
 using Microsoft.Extensions.Logging;
 
-
 namespace BlazorAdmin.Services;
 
 public class CatalogItemService : ICatalogItemService
 {
     private readonly ICatalogLookupDataService<CatalogBrand> _brandService;
-    private readonly ICatalogLookupDataService<CatalogType> _typeService;
     private readonly HttpService _httpService;
     private readonly ILogger<CatalogItemService> _logger;
+    private readonly ICatalogLookupDataService<CatalogType> _typeService;
 
     public CatalogItemService(ICatalogLookupDataService<CatalogBrand> brandService,
         ICatalogLookupDataService<CatalogType> typeService,
@@ -32,14 +31,14 @@ public class CatalogItemService : ICatalogItemService
         return response?.CatalogItem;
     }
 
-    public async Task<CatalogItem> Edit(CatalogItem catalogItem)
-    {
-        return (await _httpService.HttpPut<EditCatalogItemResult>("catalog-items", catalogItem)).CatalogItem;
-    }
-
     public async Task<string> Delete(int catalogItemId)
     {
         return (await _httpService.HttpDelete<DeleteCatalogItemResponse>("catalog-items", catalogItemId)).Status;
+    }
+
+    public async Task<CatalogItem> Edit(CatalogItem catalogItem)
+    {
+        return (await _httpService.HttpPut<EditCatalogItemResult>("catalog-items", catalogItem)).CatalogItem;
     }
 
     public async Task<CatalogItem> GetById(int id)
@@ -56,13 +55,13 @@ public class CatalogItemService : ICatalogItemService
         return catalogItem;
     }
 
-    public async Task<List<CatalogItem>> ListPaged(int pageSize)
+    public async Task<List<CatalogItem>> List()
     {
         _logger.LogInformation("Fetching catalog items from API.");
 
         var brandListTask = _brandService.List();
         var typeListTask = _typeService.List();
-        var itemListTask = _httpService.HttpGet<PagedCatalogItemResponse>($"catalog-items?PageSize=10");
+        var itemListTask = _httpService.HttpGet<PagedCatalogItemResponse>($"catalog-items");
         await Task.WhenAll(brandListTask, typeListTask, itemListTask);
         var brands = brandListTask.Result;
         var types = typeListTask.Result;
@@ -75,13 +74,13 @@ public class CatalogItemService : ICatalogItemService
         return items;
     }
 
-    public async Task<List<CatalogItem>> List()
+    public async Task<List<CatalogItem>> ListPaged(int pageSize)
     {
         _logger.LogInformation("Fetching catalog items from API.");
 
         var brandListTask = _brandService.List();
         var typeListTask = _typeService.List();
-        var itemListTask = _httpService.HttpGet<PagedCatalogItemResponse>($"catalog-items");
+        var itemListTask = _httpService.HttpGet<PagedCatalogItemResponse>($"catalog-items?PageSize=10");
         await Task.WhenAll(brandListTask, typeListTask, itemListTask);
         var brands = brandListTask.Result;
         var types = typeListTask.Result;

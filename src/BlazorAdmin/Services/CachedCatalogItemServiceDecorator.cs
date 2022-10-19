@@ -11,8 +11,8 @@ namespace BlazorAdmin.Services;
 
 public class CachedCatalogItemServiceDecorator : ICatalogItemService
 {
-    private readonly ILocalStorageService _localStorageService;
     private readonly CatalogItemService _catalogItemService;
+    private readonly ILocalStorageService _localStorageService;
     private ILogger<CachedCatalogItemServiceDecorator> _logger;
 
     public CachedCatalogItemServiceDecorator(ILocalStorageService localStorageService,
@@ -24,28 +24,33 @@ public class CachedCatalogItemServiceDecorator : ICatalogItemService
         _logger = logger;
     }
 
-    public async Task<List<CatalogItem>> ListPaged(int pageSize)
+    public async Task<CatalogItem> Create(CreateCatalogItemRequest catalogItem)
     {
-        string key = "items";
-        var cacheEntry = await _localStorageService.GetItemAsync<CacheEntry<List<CatalogItem>>>(key);
-        if (cacheEntry != null)
-        {
-            _logger.LogInformation("Loading items from local storage.");
-            if (cacheEntry.DateCreated.AddMinutes(1) > DateTime.UtcNow)
-            {
-                return cacheEntry.Value;
-            }
-            else
-            {
-                _logger.LogInformation($"Loading {key} from local storage.");
-                await _localStorageService.RemoveItemAsync(key);
-            }
-        }
+        var result = await _catalogItemService.Create(catalogItem);
+        await RefreshLocalStorageList();
 
-        var items = await _catalogItemService.ListPaged(pageSize);
-        var entry = new CacheEntry<List<CatalogItem>>(items);
-        await _localStorageService.SetItemAsync(key, entry);
-        return items;
+        return result;
+    }
+
+    public async Task<string> Delete(int id)
+    {
+        var result = await _catalogItemService.Delete(id);
+        await RefreshLocalStorageList();
+
+        return result;
+    }
+
+    public async Task<CatalogItem> Edit(CatalogItem catalogItem)
+    {
+        var result = await _catalogItemService.Edit(catalogItem);
+        await RefreshLocalStorageList();
+
+        return result;
+    }
+
+    public async Task<CatalogItem> GetById(int id)
+    {
+        return (await List()).FirstOrDefault(x => x.Id == id);
     }
 
     public async Task<List<CatalogItem>> List()
@@ -72,33 +77,28 @@ public class CachedCatalogItemServiceDecorator : ICatalogItemService
         return items;
     }
 
-    public async Task<CatalogItem> GetById(int id)
+    public async Task<List<CatalogItem>> ListPaged(int pageSize)
     {
-        return (await List()).FirstOrDefault(x => x.Id == id);
-    }
+        string key = "items";
+        var cacheEntry = await _localStorageService.GetItemAsync<CacheEntry<List<CatalogItem>>>(key);
+        if (cacheEntry != null)
+        {
+            _logger.LogInformation("Loading items from local storage.");
+            if (cacheEntry.DateCreated.AddMinutes(1) > DateTime.UtcNow)
+            {
+                return cacheEntry.Value;
+            }
+            else
+            {
+                _logger.LogInformation($"Loading {key} from local storage.");
+                await _localStorageService.RemoveItemAsync(key);
+            }
+        }
 
-    public async Task<CatalogItem> Create(CreateCatalogItemRequest catalogItem)
-    {
-        var result = await _catalogItemService.Create(catalogItem);
-        await RefreshLocalStorageList();
-
-        return result;
-    }
-
-    public async Task<CatalogItem> Edit(CatalogItem catalogItem)
-    {
-        var result = await _catalogItemService.Edit(catalogItem);
-        await RefreshLocalStorageList();
-
-        return result;
-    }
-
-    public async Task<string> Delete(int id)
-    {
-        var result = await _catalogItemService.Delete(id);
-        await RefreshLocalStorageList();
-
-        return result;
+        var items = await _catalogItemService.ListPaged(pageSize);
+        var entry = new CacheEntry<List<CatalogItem>>(items);
+        await _localStorageService.SetItemAsync(key, entry);
+        return items;
     }
 
     private async Task RefreshLocalStorageList()

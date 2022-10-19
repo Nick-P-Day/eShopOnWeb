@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.eShopWeb.ApplicationCore.Entities;
+﻿using Microsoft.eShopWeb.ApplicationCore.Entities;
 using Moq;
 using Xunit;
 
@@ -8,18 +6,6 @@ namespace Microsoft.eShopWeb.UnitTests.ApplicationCore.Specifications;
 
 public class CatalogItemsSpecification
 {
-    [Fact]
-    public void MatchesSpecificCatalogItem()
-    {
-        var catalogItemIds = new int[] { 1 };
-        var spec = new eShopWeb.ApplicationCore.Specifications.CatalogItemsSpecification(catalogItemIds);
-
-        var result = spec.Evaluate(GetTestCollection()).ToList();
-
-        Assert.NotNull(result);
-        Assert.Single(result.ToList());
-    }
-
     [Fact]
     public void MatchesAllCatalogItems()
     {
@@ -30,6 +16,18 @@ public class CatalogItemsSpecification
 
         Assert.NotNull(result);
         Assert.Equal(2, result.ToList().Count);
+    }
+
+    [Fact]
+    public void MatchesSpecificCatalogItem()
+    {
+        var catalogItemIds = new int[] { 1 };
+        var spec = new eShopWeb.ApplicationCore.Specifications.CatalogItemsSpecification(catalogItemIds);
+
+        var result = spec.Evaluate(GetTestCollection()).ToList();
+
+        Assert.NotNull(result);
+        Assert.Single(result.ToList());
     }
 
     private List<CatalogItem> GetTestCollection()

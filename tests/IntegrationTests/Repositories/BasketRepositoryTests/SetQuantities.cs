@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.eShopWeb.ApplicationCore.Entities.BasketAggregate;
-using Microsoft.eShopWeb.ApplicationCore.Interfaces;
 using Microsoft.eShopWeb.ApplicationCore.Services;
 using Microsoft.eShopWeb.Infrastructure.Data;
 using Microsoft.eShopWeb.UnitTests.Builders;
@@ -12,8 +11,8 @@ namespace Microsoft.eShopWeb.IntegrationTests.Repositories.BasketRepositoryTests
 
 public class SetQuantities
 {
-    private readonly CatalogContext _catalogContext;
     private readonly EfRepository<Basket> _basketRepository;
+    private readonly CatalogContext _catalogContext;
     private readonly BasketBuilder BasketBuilder = new BasketBuilder();
 
     public SetQuantities()

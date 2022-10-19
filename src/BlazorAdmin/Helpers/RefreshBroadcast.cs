@@ -9,13 +9,14 @@ internal sealed class RefreshBroadcast
             new Lazy<RefreshBroadcast>
                 (() => new RefreshBroadcast());
 
-    public static RefreshBroadcast Instance => Lazy.Value;
-
     private RefreshBroadcast()
     {
     }
 
     public event Action RefreshRequested;
+
+    public static RefreshBroadcast Instance => Lazy.Value;
+
     public void CallRequestRefresh()
     {
         RefreshRequested?.Invoke();

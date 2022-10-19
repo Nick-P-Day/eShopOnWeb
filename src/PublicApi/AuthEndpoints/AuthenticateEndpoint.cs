@@ -10,7 +10,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Microsoft.eShopWeb.PublicApi.AuthEndpoints;
 
 /// <summary>
-/// Authenticates a user
+///   Authenticates a user
 /// </summary>
 public class AuthenticateEndpoint : EndpointBaseAsync
     .WithRequest<AuthenticateRequest>

@@ -18,8 +18,8 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
     private readonly HttpClient _httpClient;
     private readonly ILogger<CustomAuthStateProvider> _logger;
 
-    private DateTimeOffset _userLastCheck = DateTimeOffset.FromUnixTimeSeconds(0);
     private ClaimsPrincipal _cachedUser = new ClaimsPrincipal(new ClaimsIdentity());
+    private DateTimeOffset _userLastCheck = DateTimeOffset.FromUnixTimeSeconds(0);
 
     public CustomAuthStateProvider(HttpClient httpClient,
         ILogger<CustomAuthStateProvider> logger)
@@ -31,20 +31,6 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         return new AuthenticationState(await GetUser(useCache: true));
-    }
-
-    private async ValueTask<ClaimsPrincipal> GetUser(bool useCache = false)
-    {
-        var now = DateTimeOffset.Now;
-        if (useCache && now < _userLastCheck + UserCacheRefreshInterval)
-        {
-            return _cachedUser;
-        }
-
-        _cachedUser = await FetchUser();
-        _userLastCheck = now;
-
-        return _cachedUser;
     }
 
     private async Task<ClaimsPrincipal> FetchUser()
@@ -82,5 +68,19 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", user.Token);
 
         return new ClaimsPrincipal(identity);
+    }
+
+    private async ValueTask<ClaimsPrincipal> GetUser(bool useCache = false)
+    {
+        var now = DateTimeOffset.Now;
+        if (useCache && now < _userLastCheck + UserCacheRefreshInterval)
+        {
+            return _cachedUser;
+        }
+
+        _cachedUser = await FetchUser();
+        _userLastCheck = now;
+
+        return _cachedUser;
     }
 }

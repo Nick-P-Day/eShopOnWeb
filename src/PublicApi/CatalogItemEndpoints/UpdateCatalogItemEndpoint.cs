@@ -11,12 +11,12 @@ using MinimalApi.Endpoint;
 namespace Microsoft.eShopWeb.PublicApi.CatalogItemEndpoints;
 
 /// <summary>
-/// Updates a Catalog Item
+///   Updates a Catalog Item
 /// </summary>
 public class UpdateCatalogItemEndpoint : IEndpoint<IResult, UpdateCatalogItemRequest>
 {
-    private IRepository<CatalogItem> _itemRepository;
     private readonly IUriComposer _uriComposer;
+    private IRepository<CatalogItem> _itemRepository;
 
     public UpdateCatalogItemEndpoint(IUriComposer uriComposer)
     {
@@ -41,7 +41,7 @@ public class UpdateCatalogItemEndpoint : IEndpoint<IResult, UpdateCatalogItemReq
         var response = new UpdateCatalogItemResponse(request.CorrelationId());
 
         var existingItem = await _itemRepository.GetByIdAsync(request.Id);
-        
+
         CatalogItem.CatalogItemDetails details = new(request.Name, request.Description, request.Price);
         existingItem.UpdateDetails(details);
         existingItem.UpdateBrand(request.CatalogBrandId);

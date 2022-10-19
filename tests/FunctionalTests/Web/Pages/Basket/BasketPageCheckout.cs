@@ -19,7 +19,6 @@ public class BasketPageCheckout : IClassFixture<TestApplication>
     [Fact]
     public async Task RedirectsToLoginIfNotAuthenticated()
     {
-
         // Load Home Page
         var response = await Client.GetAsync("/");
         response.EnsureSuccessStatusCode();

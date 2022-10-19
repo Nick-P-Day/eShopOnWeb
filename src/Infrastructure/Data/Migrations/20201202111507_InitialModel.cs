@@ -5,6 +5,39 @@ namespace Microsoft.eShopWeb.Infrastructure.Data.Migrations;
 
 public partial class InitialModel : Migration
 {
+    protected override void Down(MigrationBuilder migrationBuilder)
+    {
+        migrationBuilder.DropTable(
+            name: "BasketItems");
+
+        migrationBuilder.DropTable(
+            name: "Catalog");
+
+        migrationBuilder.DropTable(
+            name: "OrderItems");
+
+        migrationBuilder.DropTable(
+            name: "Baskets");
+
+        migrationBuilder.DropTable(
+            name: "CatalogBrands");
+
+        migrationBuilder.DropTable(
+            name: "CatalogTypes");
+
+        migrationBuilder.DropTable(
+            name: "Orders");
+
+        migrationBuilder.DropSequence(
+            name: "catalog_brand_hilo");
+
+        migrationBuilder.DropSequence(
+            name: "catalog_hilo");
+
+        migrationBuilder.DropSequence(
+            name: "catalog_type_hilo");
+    }
+
     protected override void Up(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.CreateSequence(
@@ -169,38 +202,5 @@ public partial class InitialModel : Migration
             name: "IX_OrderItems_OrderId",
             table: "OrderItems",
             column: "OrderId");
-    }
-
-    protected override void Down(MigrationBuilder migrationBuilder)
-    {
-        migrationBuilder.DropTable(
-            name: "BasketItems");
-
-        migrationBuilder.DropTable(
-            name: "Catalog");
-
-        migrationBuilder.DropTable(
-            name: "OrderItems");
-
-        migrationBuilder.DropTable(
-            name: "Baskets");
-
-        migrationBuilder.DropTable(
-            name: "CatalogBrands");
-
-        migrationBuilder.DropTable(
-            name: "CatalogTypes");
-
-        migrationBuilder.DropTable(
-            name: "Orders");
-
-        migrationBuilder.DropSequence(
-            name: "catalog_brand_hilo");
-
-        migrationBuilder.DropSequence(
-            name: "catalog_hilo");
-
-        migrationBuilder.DropSequence(
-            name: "catalog_type_hilo");
     }
 }

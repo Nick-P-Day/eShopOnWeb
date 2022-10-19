@@ -11,10 +11,10 @@ namespace Microsoft.eShopWeb.ApplicationCore.Services;
 
 public class OrderService : IOrderService
 {
-    private readonly IRepository<Order> _orderRepository;
-    private readonly IUriComposer _uriComposer;
     private readonly IRepository<Basket> _basketRepository;
     private readonly IRepository<CatalogItem> _itemRepository;
+    private readonly IRepository<Order> _orderRepository;
+    private readonly IUriComposer _uriComposer;
 
     public OrderService(IRepository<Basket> basketRepository,
         IRepository<CatalogItem> itemRepository,

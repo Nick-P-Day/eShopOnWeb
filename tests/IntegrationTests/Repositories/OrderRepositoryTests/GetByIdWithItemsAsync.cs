@@ -14,7 +14,6 @@ public class GetByIdWithItemsAsync
 {
     private readonly CatalogContext _catalogContext;
     private readonly EfRepository<Order> _orderRepository;
-    private OrderBuilder OrderBuilder { get; } = new OrderBuilder();
 
     public GetByIdWithItemsAsync()
     {
@@ -24,6 +23,8 @@ public class GetByIdWithItemsAsync
         _catalogContext = new CatalogContext(dbOptions);
         _orderRepository = new EfRepository<Order>(_catalogContext);
     }
+
+    private OrderBuilder OrderBuilder { get; } = new OrderBuilder();
 
     [Fact]
     public async Task GetOrderAndItemsByOrderIdWhenMultipleOrdersPresent()
